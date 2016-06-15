@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{19DD11EE-247A-4E20-91FC-1AD457C36ECE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RuleEngineTests</RootNamespace>
+    <AssemblyName>RuleEngineTests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbcdRules.cs" />
+    <Compile Include="Bingo.cs" />
+    <Compile Include="Abcd.cs" />
+    <Compile Include="BingoRules.cs" />
+    <Compile Include="CompositeObjectsWithoutInterfacesTestFixture.cs" />
+    <Compile Include="CompositeObjectsWithInterfacesTestFixture.cs" />
+    <Compile Include="DynamicWrapperTestFixture.cs" />
+    <Compile Include="IAbcd.cs" />
+    <Compile Include="IBingo.cs" />
+    <Compile Include="InterfaceWrapperTestFixture.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RulesEngineTestFixture.cs" />
+    <Compile Include="TestModelWithInterfaces\CdsRules.cs" />
+    <Compile Include="TestModelWithInterfaces\CdsTrade.cs" />
+    <Compile Include="TestModelWithInterfaces\CreditDefaultSwap.cs" />
+    <Compile Include="TestModelWithInterfaces\ICdsTrade.cs" />
+    <Compile Include="TestModelWithInterfaces\ICreditDefaultSwap.cs" />
+    <Compile Include="TestModelWithInterfaces\IProduct.cs" />
+    <Compile Include="TestModelWithInterfaces\ITrade.cs" />
+    <Compile Include="TestModelWithInterfaces\Trade.cs" />
+    <Compile Include="TestModelWithoutInterfaces\CdsRules.cs" />
+    <Compile Include="TestModelWithoutInterfaces\CdsTrade.cs" />
+    <Compile Include="TestModelWithoutInterfaces\CreditDefaultSwap.cs" />
+    <Compile Include="TestModelWithoutInterfaces\IProduct.cs" />
+    <Compile Include="TestModelWithoutInterfaces\Trade.cs" />
+    <Compile Include="UtlitiesTestFixture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessRulesEngine\BusinessRulesEngine.csproj">
+      <Project>{949e898f-d511-4774-a3f3-95ff3e5c3acb}</Project>
+      <Name>BusinessRulesEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
