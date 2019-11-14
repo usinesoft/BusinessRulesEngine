@@ -1,0 +1,57 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+    <metadata>
+        <!-- The identifier that must be unique within the hosting gallery -->
+        <id>BusinessRules.Engine</id>
+
+        <!-- The package version number that is used when resolving dependencies -->
+        <version>1.0.4</version>
+
+        <!-- Authors contain text that appears directly on the gallery -->
+        <authors>Dan Ionescu</authors>
+
+        <!-- 
+            Owners are typically nuget.org identities that allow gallery
+            users to easily find other packages by the same owners.  
+        -->
+        <owners>USINESOFT</owners>
+        
+         <!-- Project URL provides a link for the gallery -->
+        <projectUrl>https://github.com/usinesoft/BusinessRulesEngine</projectUrl>
+
+         <!-- License information is displayed on the gallery -->
+        <license type="expression">Apache-2.0</license>
+        
+
+        <!-- The icon is used in Visual Studio's package manager UI -->
+        <!-- iconUrl>http://github.com/contoso/UsefulStuff/nuget_icon.png</iconUrl -->
+
+        <!-- 
+            If true, this value prompts the user to accept the license when
+            installing the package. 
+        -->
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+
+        <!-- Any details about this particular release -->
+        <releaseNotes>As nuget package</releaseNotes>
+
+        <!-- 
+            The description can be used in package manager UI. Note that the
+            nuget.org gallery uses information you add in the portal. 
+        -->
+        <description>Rules engine for .Net applications</description>
+
+        <!-- Copyright information -->
+        <copyright>Copyright ©2016 USINESOFT</copyright>
+
+        <!-- Tags appear in the gallery and can be used for tag searches -->
+        <tags>business rules engine enrichment financial</tags>
+
+        <!-- Dependencies are automatically installed when the package is installed -->
+        <dependencies>
+            <dependency id="castle.Core" version="4.4.0" />
+        </dependencies>
+    </metadata>
+
+    
+</package>
