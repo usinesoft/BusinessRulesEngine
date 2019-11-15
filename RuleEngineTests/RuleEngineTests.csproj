@@ -72,6 +72,7 @@
     <Compile Include="TestModelWithoutInterfaces\IProduct.cs" />
     <Compile Include="TestModelWithoutInterfaces\Trade.cs" />
     <Compile Include="UtlitiesTestFixture.cs" />
+    <Compile Include="Xyz.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

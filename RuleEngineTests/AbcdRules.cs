@@ -32,4 +32,23 @@ namespace RuleEngineTests
                 .EndRule();
         }
     }
+
+    public class XyzRules : MappingRules<Xyz>
+    {
+        public XyzRules(Xyz parent)
+            : base(parent)
+        {
+            Set(x => x.Y)
+                .With(x => x.X * 2)
+                .OnChanged(x => x.X)
+                .EndRule();
+
+            Set(x => x.Z)
+                .With(x => x.Y * 2)
+                .OnChanged(x => x.Y)
+                .EndRule();
+
+
+        }
+    }
 }

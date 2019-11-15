@@ -22,7 +22,7 @@ namespace BusinessRulesEngine.Interceptors
         /// </summary>
         public InterfaceWrapper(T instance, MappingRules<T> rules)
         {
-            Target = Generator.CreateInterfaceProxyWithTarget(instance, new Interceptor(rules, this));
+            Target = typeof(T).IsInterface ? Generator.CreateInterfaceProxyWithTarget(instance, new Interceptor(rules, this)) : Generator.CreateClassProxyWithTarget(instance, new Interceptor(rules, this));
         }
 
         public T Target { get; }

@@ -50,5 +50,24 @@ namespace RuleEngineTests
                 Assert.AreEqual("BONGO", bingo.Target.Message);
             }
         }
+
+
+        [Test]
+        public void Intercept_changes_with_interface_wrapper_without_interface()
+        {
+            {
+                var instance = new Xyz();
+
+                var xyz = new InterfaceWrapper<Xyz>(instance, new XyzRules(instance));
+
+                xyz.Target.X = 1; 
+
+                Assert.AreEqual(2, instance.Y);
+
+                Assert.AreEqual(4, instance.Z);
+                
+            }
+        }
     }
+
 }
