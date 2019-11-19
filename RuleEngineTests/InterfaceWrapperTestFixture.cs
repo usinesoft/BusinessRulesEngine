@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using BusinessRulesEngine.Interceptors;
+using System.Diagnostics;
 using NUnit.Framework;
+using RulesEngine.Interceptors;
 
 namespace RuleEngineTests
 {
@@ -14,7 +16,7 @@ namespace RuleEngineTests
             {
                 var instance = new Abcd();
 
-                var abcd = new InterfaceWrapper<IAbcd>(instance, new AbcdRules(instance));
+                var abcd = new InterfaceWrapper<IAbcd>(instance, new AbcdRules());
 
                 var inotify = (INotifyPropertyChanged) abcd;
 
@@ -32,7 +34,7 @@ namespace RuleEngineTests
             {
                 var instance = new Bingo();
 
-                var bingo = new InterfaceWrapper<IBingo>(instance, new BingoRules(instance));
+                var bingo = new InterfaceWrapper<IBingo>(instance, new BingoRules());
 
                 var inotify = (INotifyPropertyChanged) bingo;
 
@@ -58,7 +60,7 @@ namespace RuleEngineTests
             {
                 var instance = new Xyz();
 
-                var xyz = new InterfaceWrapper<Xyz>(instance, new XyzRules(instance));
+                var xyz = new InterfaceWrapper<Xyz>(instance, new XyzRules());
 
                 xyz.Target.X = 1; 
 
@@ -67,6 +69,40 @@ namespace RuleEngineTests
                 Assert.AreEqual(4, instance.Z);
                 
             }
+        }
+
+
+        [Test]
+        public void Performance_test()
+        {
+            var rules = new XyzRules();
+
+            // warm up
+            {
+                var instance = new Xyz();
+
+                var xyz = new InterfaceWrapper<Xyz>(instance, rules);
+
+                xyz.Target.X = 1;
+
+            }
+
+            var sw = new Stopwatch();
+
+            sw.Start();
+            for (int i = 0; i < 1000; i++)
+            {
+                var instance = new Xyz();
+
+                var xyz = new InterfaceWrapper<Xyz>(instance, rules);
+
+                xyz.Target.X = 1;
+
+            }
+
+            sw.Stop();
+
+            Console.WriteLine($"took {sw.ElapsedMilliseconds} ms");
         }
     }
 

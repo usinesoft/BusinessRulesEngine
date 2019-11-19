@@ -1,10 +1,10 @@
 using System;
 using System.ComponentModel;
 using System.Dynamic;
-using BusinessRulesEngine.RulesEngine;
-using BusinessRulesEngine.Tools;
+using RulesEngine.RulesEngine;
+using RulesEngine.Tools;
 
-namespace BusinessRulesEngine.Interceptors
+namespace RulesEngine.Interceptors
 {
     /// <summary>
     ///     Wraps business object as a <see cref="DynamicObject" />. It can be used tu intercept accessor calls on types that
@@ -18,11 +18,23 @@ namespace BusinessRulesEngine.Interceptors
         /// </summary>
         private readonly MappingRules<T> _businessRules;
 
+        private readonly object _root;
         private readonly object _wrappedObject;
 
-        public DynamicWrapper(object obj, MappingRules<T> businessRules)
+
+        internal DynamicWrapper(object root, object obj, MappingRules<T> businessRules)
         {
+            _root = root;
             _wrappedObject = obj ?? throw new ArgumentNullException(nameof(obj));
+            _businessRules = businessRules;
+        }
+
+        
+        public DynamicWrapper(object root, MappingRules<T> businessRules)
+        {
+            
+            _wrappedObject = root ?? throw new ArgumentNullException(nameof(root));
+            _root = root;
             _businessRules = businessRules;
         }
 
@@ -58,6 +70,7 @@ namespace BusinessRulesEngine.Interceptors
 
                 return true;
             }
+
             catch
             {
                 result = null;
@@ -75,12 +88,9 @@ namespace BusinessRulesEngine.Interceptors
         {
             try
             {
-                var modified = _businessRules.SetProperty(binder.Name, _wrappedObject, value);
+                var modified = _businessRules.SetProperty(binder.Name, _root, _wrappedObject, value);
 
-                foreach (var property in modified)
-                {
-                    OnPropertyChanged(property);
-                }
+                foreach (var property in modified) OnPropertyChanged(property);
 
                 return true;
             }
@@ -93,22 +103,15 @@ namespace BusinessRulesEngine.Interceptors
 
         private static bool IsComplexType(Type type)
         {
-            if (type.IsValueType)
-            {
-                return false;
-            }
+            if (type.IsValueType) return false;
 
-            if (type == typeof (string))
-            {
-                return false;
-            }
+            if (type == typeof(string)) return false;
 
             return type.IsClass;
         }
 
         /// <summary>
         ///     Intercept calls to property getters. Let the invocation being done normally for now
-        ///     
         /// </summary>
         /// <param name="binder"></param>
         /// <param name="result"></param>
@@ -121,7 +124,7 @@ namespace BusinessRulesEngine.Interceptors
                 var getterResult = getter(_wrappedObject);
 
                 result = IsComplexType(getterResult.GetType())
-                    ? new DynamicWrapper<T>(getterResult, _businessRules)
+                    ? new DynamicWrapper<T>(_root, getterResult, _businessRules)
                     : getterResult;
 
                 return true;

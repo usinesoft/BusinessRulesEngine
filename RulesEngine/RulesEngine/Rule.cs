@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BusinessRulesEngine.RulesEngine
+namespace RulesEngine.RulesEngine
 {
     /// <summary>
     ///     A rule assigns a value to a single property. It can be triggered by a list of properties

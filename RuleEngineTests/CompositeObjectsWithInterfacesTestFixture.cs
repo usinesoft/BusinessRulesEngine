@@ -1,6 +1,6 @@
-using BusinessRulesEngine.Interceptors;
 using NUnit.Framework;
 using RuleEngineTests.TestModelWithInterfaces;
+using RulesEngine.Interceptors;
 
 namespace RuleEngineTests
 {
@@ -15,7 +15,7 @@ namespace RuleEngineTests
                 Product = new CreditDefaultSwap()
             };
 
-            var p = new InterfaceWrapper<ICdsTrade>(trade, new CdsRules(trade)).Target;
+            var p = new InterfaceWrapper<ICdsTrade>(trade, new CdsRules()).Target;
 
             p.CdsProduct.RefEntity = "AXA";
 

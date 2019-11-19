@@ -40,11 +40,11 @@ namespace RuleEngineTests
         public void Cascading_perf_test()
         {
             var abcd = new Abcd();
-            var abcdRules = new AbcdRules(abcd);
+            var abcdRules = new AbcdRules();
 
             var time0 = TimeInMilliseconds(i =>
             {
-                abcdRules.SetProperty("A", abcd, 1);
+                abcdRules.SetProperty("A", abcd, abcd,  1);
                 Assert.AreEqual(100, abcd.A);
             }, 100);
 
@@ -57,18 +57,18 @@ namespace RuleEngineTests
         public void Check_cascading_by_rule_engine()
         {
             var bingo = new Bingo();
-            var rules = new BingoRules(bingo);
+            var rules = new BingoRules();
 
             {
                 // setting Message property does not trigger any rule
-                var modified = rules.SetProperty("Message", bingo, "test");
+                var modified = rules.SetProperty("Message", bingo, bingo, "test");
                 Assert.AreEqual(1, modified.Count);
                 Assert.IsTrue(modified.Contains("Message"));
                 Assert.AreEqual("test", bingo.Message);
             }
 
             {
-                var modified = rules.SetProperty("X", bingo, 3);
+                var modified = rules.SetProperty("X", bingo, bingo, 3);
 
                 Assert.AreEqual(3, modified.Count);
                 Assert.IsTrue(modified.Contains("X"));
@@ -79,16 +79,16 @@ namespace RuleEngineTests
 
                 var x = bingo.X;
 
-                // setting the samevalue should not trigger any rule
-                modified = rules.SetProperty("X", bingo, x);
+                // setting the same value should not trigger any rule
+                modified = rules.SetProperty("X", bingo, bingo, x);
                 Assert.AreEqual(0, modified.Count);
             }
 
             {
                 var abcd = new Abcd();
-                var abcdRules = new AbcdRules(abcd);
+                var abcdRules = new AbcdRules();
 
-                var modified = abcdRules.SetProperty("A", abcd, 1);
+                var modified = abcdRules.SetProperty("A", abcd, abcd, 1);
                 Assert.AreEqual(4, modified.Count);
                 Assert.IsTrue(modified.Contains("A"));
                 Assert.IsTrue(modified.Contains("B"));

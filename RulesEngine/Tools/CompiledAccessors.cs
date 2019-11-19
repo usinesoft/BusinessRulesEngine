@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace BusinessRulesEngine.Tools
+namespace RulesEngine.Tools
 {
     /// <summary>
     ///     Caches a compiled version for the public accessors of a type

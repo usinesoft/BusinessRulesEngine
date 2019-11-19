@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using BusinessRulesEngine.Tools;
 using NUnit.Framework;
 using RuleEngineTests.TestModelWithoutInterfaces;
+using RulesEngine.Tools;
 
 namespace RuleEngineTests
 {

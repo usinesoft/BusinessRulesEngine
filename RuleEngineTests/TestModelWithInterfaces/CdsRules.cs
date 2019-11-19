@@ -1,12 +1,11 @@
 ﻿using System;
-using BusinessRulesEngine.RulesEngine;
+using RulesEngine.RulesEngine;
 
 namespace RuleEngineTests.TestModelWithInterfaces
 {
     public class CdsRules : MappingRules<ICdsTrade>
     {
-        public CdsRules(ICdsTrade parent)
-            : base(parent)
+        public CdsRules()
         {
             Set(t => t.CounterpartyRole)
                 .With(t => t.Sales != null ? "Client" : "Dealer")

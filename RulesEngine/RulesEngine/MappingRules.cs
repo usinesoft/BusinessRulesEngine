@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using BusinessRulesEngine.Tools;
+using RulesEngine.Tools;
 
-namespace BusinessRulesEngine.RulesEngine
+namespace RulesEngine.RulesEngine
 {
     /// <summary>
     ///     The business rules engine. It triggers the corresponding rule execution when a property changes from an external
@@ -11,18 +11,12 @@ namespace BusinessRulesEngine.RulesEngine
     ///     or from a previous rule execution
     ///     Concrete classes should inherit from this one and declare all the rules in the constructor by using a fluent syntax
     /// </summary>
-    /// <typeparam name="TParent"></typeparam>
-    public abstract class MappingRules<TParent>
+    /// <typeparam name="TRoot"></typeparam>
+    public abstract class MappingRules<TRoot>
     {
-        private readonly Dictionary<string, IList<Rule<TParent>>> _rulesByTrigger =
-            new Dictionary<string, IList<Rule<TParent>>>();
+        private readonly Dictionary<string, IList<Rule<TRoot>>> _rulesByTrigger =
+            new Dictionary<string, IList<Rule<TRoot>>>();
 
-        protected MappingRules(TParent root)
-        {
-            Root = root;
-        }
-
-        private TParent Root { get; }
 
         /// <summary>
         ///     If set triggers an exception which prevent a stack overflow if the specified level of recursion is over the
@@ -30,7 +24,7 @@ namespace BusinessRulesEngine.RulesEngine
         /// </summary>
         protected int RecursionLimit { get; set; }
 
-        public IDictionary<string, IList<Rule<TParent>>> RulesByTrigger => _rulesByTrigger;
+        public IDictionary<string, IList<Rule<TRoot>>> RulesByTrigger => _rulesByTrigger;
 
         /// <summary>
         ///     First declaration of the fluent syntax. Sets the target property of the rule
@@ -38,10 +32,10 @@ namespace BusinessRulesEngine.RulesEngine
         /// <typeparam name="TTargetProperty"></typeparam>
         /// <param name="propertySelector"></param>
         /// <returns></returns>
-        protected FluentExtensions.FluentToken<TParent, TTargetProperty> Set<TTargetProperty>(
-            Expression<Func<TParent, TTargetProperty>> propertySelector)
+        protected FluentExtensions.FluentToken<TRoot, TTargetProperty> Set<TTargetProperty>(
+            Expression<Func<TRoot, TTargetProperty>> propertySelector)
         {
-            return new FluentExtensions.FluentToken<TParent, TTargetProperty>
+            return new FluentExtensions.FluentToken<TRoot, TTargetProperty>
             {
                 MappingRulesContainer = this,
                 TargetPropertySelector = propertySelector
@@ -51,10 +45,11 @@ namespace BusinessRulesEngine.RulesEngine
         /// <summary>
         /// </summary>
         /// <param name="propertyName"></param>
-        /// <param name="parent"></param>
+        /// <param name="root">the root (entry point) of the object graph</param>
+        /// <param name="parent">the owner of the property</param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public ICollection<string> SetProperty(string propertyName, object parent, object value)
+        public ICollection<string> SetProperty(string propertyName, object root, object parent, object value)
         {
             var modified = new HashSet<string>();
 
@@ -64,26 +59,20 @@ namespace BusinessRulesEngine.RulesEngine
             if (hasChanged)
             {
                 modified.Add(propertyName);
-                Cascade(propertyName, Root, modified, 1);
+                Cascade(propertyName, root, parent, modified, 1);
             }
 
             return modified;
         }
 
-        private void Cascade(string propertyName, object parent, HashSet<string> modified, int recursionLimit)
+        private void Cascade(string propertyName, object root, object parent, HashSet<string> modified,
+            int recursionLimit)
         {
             if (RecursionLimit > 0)
-            {
                 if (recursionLimit > RecursionLimit)
-                {
                     throw new NotSupportedException("Recursion limit exceeded: probably circular dependency");
-                }
-            }
 
-            if (!_rulesByTrigger.TryGetValue(propertyName, out var rules))
-            {
-                rules = new List<Rule<TParent>>();
-            }
+            if (!_rulesByTrigger.TryGetValue(propertyName, out var rules)) rules = new List<Rule<TRoot>>();
 
             var modifiedInThisIteration = new HashSet<string>();
 
@@ -91,21 +80,18 @@ namespace BusinessRulesEngine.RulesEngine
             {
                 var targetName = rule.TargetPropertyName;
 
-                if (rule.Updater((TParent) parent))
+                if (rule.Updater((TRoot) root))
                 {
-                    Trace(rule, propertyName, (TParent) parent);
+                    Trace(rule, propertyName, (TRoot) root);
                     modified.Add(targetName);
                     modifiedInThisIteration.Add(targetName);
                 }
             }
 
-            foreach (var name in modifiedInThisIteration)
-            {
-                Cascade(name, Root, modified, recursionLimit + 1);
-            }
+            foreach (var name in modifiedInThisIteration) Cascade(name, root, parent, modified, recursionLimit + 1);
         }
 
-        protected virtual void Trace(Rule<TParent> triggeredRule, string triggerProperty, TParent instance)
+        protected virtual void Trace(Rule<TRoot> triggeredRule, string triggerProperty, TRoot instance)
         {
         }
     }

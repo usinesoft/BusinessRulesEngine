@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace BusinessRulesEngine.Tools
+namespace RulesEngine.Tools
 {
     /// <summary>
     ///     Caches compiled versions of expression trees

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using BusinessRulesEngine.Tools;
+using RulesEngine.Tools;
 
-namespace BusinessRulesEngine.RulesEngine
+namespace RulesEngine.RulesEngine
 {
     /// <summary>
     ///     Implement a fluent syntax o define business rules

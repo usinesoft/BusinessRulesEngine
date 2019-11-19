@@ -8,7 +8,7 @@ Complex cascade defaulting of properties on an object graph triggered by other p
 ### The problem
 
 I was motivated to develop this component by a real-life problem. Very complex cascading rules that are required by a trade processing system. It is already used in production environment (investment banking). The same need may arrive in a large category of business-line systems.
-Given on abject graph, when a property of an object is changed, it triggers cascading changes (defaulting of values dependent of other properties) in the whole graph. 
+Given on object graph, when a property of an object is changed, it triggers cascading changes (defaulting of values dependent of other properties) in the whole graph. 
 Naïve approaches simply do not work. 
 Triggering the business rules inside the setters, or worse, coding the business rules inside the setters. Seems straight-forward but it is not maintainable in the long run:
 -	Business rules are strongly coupled with data structure: this does not allow to apply different rules depending on the context
@@ -38,8 +38,7 @@ Rules are expressed in a different class. They are all described in the construc
  ```csharp
 public class AbcdRules : MappingRules<IAbcd>
 {
-    public AbcdRules(IAbcd parent)
-        : base(parent)
+    public AbcdRules()        
     {
         Set(x => x.B)
             .With(x => x.A)
@@ -73,7 +72,9 @@ In order to use the rules engine we instantiate a "facade". It takes an instance
  ```csharp
 var instance = new Abcd();
 
-var abcd = new InterfaceWrapper<IAbcd>(instance, new AbcdRules(instance));
+var rules = new AbcdRules()
+
+var abcd = new InterfaceWrapper<IAbcd>(instance, rules);
 ```
 We set vales on the facade as if it was our business object
 
@@ -104,7 +105,9 @@ var trade = new CdsTrade
     Product = new CreditDefaultSwap()
 };
 
-dynamic p = new DynamicWrapper<CdsTrade>(trade, new CdsRules(trade));
+var rules = new CdsRules();
+
+dynamic p = new DynamicWrapper<CdsTrade>(trade, rules);
 
 p.CdsProduct.RefEntity = "AXA";
 
@@ -116,13 +119,12 @@ Assert.AreEqual("SNR", trade.CdsProduct.Seniority);
 
 ```
 
-A small excerpt from the rules of system in production (the complete code uses around 300 rules):
+A small excerpt from the rules of a system in production (the complete code uses around 300 rules):
 
 ```csharp
 public class CdsRules : MappingRules<CdsTrade>
 {
-    public CdsRules(CdsTrade parent)
-        : base(parent)
+    public CdsRules()        
     {
         Set(t => t.CounterpartyRole)
             .With(t => t.Sales != null ? "Client" : "Dealer")

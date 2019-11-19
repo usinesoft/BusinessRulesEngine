@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using BusinessRulesEngine.Interceptors;
 using NUnit.Framework;
+using RulesEngine.Interceptors;
 
 namespace RuleEngineTests
 {
@@ -14,7 +14,7 @@ namespace RuleEngineTests
             {
                 var instance = new Abcd();
 
-                dynamic abcd = new DynamicWrapper<IAbcd>(instance, new AbcdRules(instance));
+                dynamic abcd = new DynamicWrapper<IAbcd>(instance, new AbcdRules());
 
                 var inotify = (INotifyPropertyChanged) abcd;
 
@@ -32,7 +32,7 @@ namespace RuleEngineTests
             {
                 var instance = new Bingo();
 
-                dynamic bingo = new DynamicWrapper<IBingo>(instance, new BingoRules(instance));
+                dynamic bingo = new DynamicWrapper<IBingo>(instance, new BingoRules());
 
                 var inotify = (INotifyPropertyChanged) bingo;
 

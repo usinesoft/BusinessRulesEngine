@@ -1,6 +1,6 @@
-using BusinessRulesEngine.Interceptors;
 using NUnit.Framework;
 using RuleEngineTests.TestModelWithoutInterfaces;
+using RulesEngine.Interceptors;
 
 namespace RuleEngineTests
 {
@@ -15,7 +15,7 @@ namespace RuleEngineTests
                 Product = new CreditDefaultSwap()
             };
 
-            dynamic p = new DynamicWrapper<CdsTrade>(trade, new CdsRules(trade));
+            dynamic p = new DynamicWrapper<CdsTrade>(trade, new CdsRules());
 
             p.CdsProduct.RefEntity = "AXA";
 

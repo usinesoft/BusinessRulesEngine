@@ -1,11 +1,10 @@
-using BusinessRulesEngine.RulesEngine;
+using RulesEngine.RulesEngine;
 
 namespace RuleEngineTests
 {
     public class AbcdRules : MappingRules<IAbcd>
     {
-        public AbcdRules(IAbcd parent)
-            : base(parent)
+        public AbcdRules()
         {
             Set(x => x.B)
                 .With(x => x.A)
@@ -30,25 +29,6 @@ namespace RuleEngineTests
                 .If(x => x.A < 100)
                 .OnChanged(x => x.D)
                 .EndRule();
-        }
-    }
-
-    public class XyzRules : MappingRules<Xyz>
-    {
-        public XyzRules(Xyz parent)
-            : base(parent)
-        {
-            Set(x => x.Y)
-                .With(x => x.X * 2)
-                .OnChanged(x => x.X)
-                .EndRule();
-
-            Set(x => x.Z)
-                .With(x => x.Y * 2)
-                .OnChanged(x => x.Y)
-                .EndRule();
-
-
         }
     }
 }

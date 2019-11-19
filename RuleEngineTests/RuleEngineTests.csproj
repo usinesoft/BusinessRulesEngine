@@ -73,6 +73,7 @@
     <Compile Include="TestModelWithoutInterfaces\Trade.cs" />
     <Compile Include="UtlitiesTestFixture.cs" />
     <Compile Include="Xyz.cs" />
+    <Compile Include="XyzRules.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

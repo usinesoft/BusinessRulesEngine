@@ -1,12 +1,11 @@
 using System;
-using BusinessRulesEngine.RulesEngine;
+using RulesEngine.RulesEngine;
 
 namespace RuleEngineTests
 {
     public class BingoRules : MappingRules<IBingo>
     {
-        public BingoRules(IBingo parent)
-            : base(parent)
+        public BingoRules()
         {
             Set(i => i.X)
                 .With(i => i.Y + 1)

@@ -1,8 +1,8 @@
 using System.ComponentModel;
-using BusinessRulesEngine.RulesEngine;
 using Castle.DynamicProxy;
+using RulesEngine.RulesEngine;
 
-namespace BusinessRulesEngine.Interceptors
+namespace RulesEngine.Interceptors
 {
     /// <summary>
     ///     Intercept calls to non sealed classes that implement interfaces
@@ -14,6 +14,8 @@ namespace BusinessRulesEngine.Interceptors
     public sealed class InterfaceWrapper<T> : INotifyPropertyChanged
         where T : class
     {
+        private T _root;
+
         // ReSharper disable once StaticMemberInGenericType
         private static ProxyGenerator Generator { get; } = new ProxyGenerator();
 
@@ -22,7 +24,8 @@ namespace BusinessRulesEngine.Interceptors
         /// </summary>
         public InterfaceWrapper(T instance, MappingRules<T> rules)
         {
-            Target = typeof(T).IsInterface ? Generator.CreateInterfaceProxyWithTarget(instance, new Interceptor(rules, this)) : Generator.CreateClassProxyWithTarget(instance, new Interceptor(rules, this));
+            _root = instance;
+            Target = typeof(T).IsInterface ? Generator.CreateInterfaceProxyWithTarget(instance, new Interceptor(rules, this, instance)) : Generator.CreateClassProxyWithTarget(instance, new Interceptor(rules, this, instance));
         }
 
         public T Target { get; }
@@ -42,12 +45,14 @@ namespace BusinessRulesEngine.Interceptors
         private class Interceptor : IInterceptor
         {
             private readonly InterfaceWrapper<T> _parent;
+            private readonly T _instance;
             private readonly MappingRules<T> _rules;
 
-            public Interceptor(MappingRules<T> rules, InterfaceWrapper<T> parent)
+            public Interceptor(MappingRules<T> rules, InterfaceWrapper<T> parent, T instance)
             {
                 _rules = rules;
                 _parent = parent;
+                _instance = instance;
             }
 
             public void Intercept(IInvocation invocation)
@@ -63,7 +68,7 @@ namespace BusinessRulesEngine.Interceptors
                     {
                         // wrap the result of the getter in a proxy
                         var proxy = Generator.CreateInterfaceProxyWithTarget(getterReturnType, invocation.ReturnValue,
-                            new Interceptor(_rules, _parent));
+                            new Interceptor(_rules, _parent, _instance));
 
                         invocation.ReturnValue = proxy;
                     }
@@ -72,7 +77,7 @@ namespace BusinessRulesEngine.Interceptors
                 {
                     var propertyName = methodName.Substring(4);
 
-                    var modified = _rules.SetProperty(propertyName, invocation.InvocationTarget, invocation.Arguments[0]);
+                    var modified = _rules.SetProperty(propertyName, _instance, invocation.InvocationTarget, invocation.Arguments[0]);
 
                     foreach (var property in modified)
                     {
