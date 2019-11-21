@@ -5,7 +5,7 @@ using RulesEngine.RulesEngine;
 namespace RulesEngine.Interceptors
 {
     /// <summary>
-    ///     Intercept calls to non sealed classes that implement interfaces
+    ///     Intercept calls to non sealed classes that have all public properties virtual
     ///     Calls to setters are diverted to rule engine
     ///     Calls to getters are intercepted to wrap the returned value (if it is an interface)
     ///     Calls to methods are silently ignored
@@ -14,8 +14,6 @@ namespace RulesEngine.Interceptors
     public sealed class InterfaceWrapper<T> : INotifyPropertyChanged
         where T : class
     {
-        private T _root;
-
         // ReSharper disable once StaticMemberInGenericType
         private static ProxyGenerator Generator { get; } = new ProxyGenerator();
 
@@ -24,7 +22,6 @@ namespace RulesEngine.Interceptors
         /// </summary>
         public InterfaceWrapper(T instance, MappingRules<T> rules)
         {
-            _root = instance;
             Target = typeof(T).IsInterface ? Generator.CreateInterfaceProxyWithTarget(instance, new Interceptor(rules, this, instance)) : Generator.CreateClassProxyWithTarget(instance, new Interceptor(rules, this, instance));
         }
 
@@ -68,6 +65,13 @@ namespace RulesEngine.Interceptors
                     {
                         // wrap the result of the getter in a proxy
                         var proxy = Generator.CreateInterfaceProxyWithTarget(getterReturnType, invocation.ReturnValue,
+                            new Interceptor(_rules, _parent, _instance));
+
+                        invocation.ReturnValue = proxy;
+                    }
+                    else if(getterReturnType.IsClass && !getterReturnType.Namespace.StartsWith("System")) // avoid elementary types that are class
+                    {
+                        var proxy = Generator.CreateClassProxyWithTarget(getterReturnType, invocation.ReturnValue,
                             new Interceptor(_rules, _parent, _instance));
 
                         invocation.ReturnValue = proxy;
