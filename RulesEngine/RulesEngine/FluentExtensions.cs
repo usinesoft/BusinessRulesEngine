@@ -35,63 +35,18 @@ namespace RulesEngine.RulesEngine
         ///     Specifies the first trigger property
         /// </summary>
         /// <typeparam name="TParent"></typeparam>
-        /// <typeparam name="TProperty"></typeparam>
         /// <typeparam name="TTargetProperty"></typeparam>
         /// <param name="token"></param>
-        /// <param name="propertySelector"></param>
+        /// <param name="propertySelectors"></param>
         /// <returns></returns>
-        public static FluentToken<TParent, TTargetProperty> OnChanged<TParent, TProperty, TTargetProperty>(
-            this FluentToken<TParent, TTargetProperty> token, Expression<Func<TParent, TProperty>> propertySelector)
+        public static void OnChanged<TParent, TTargetProperty>(
+            this FluentToken<TParent, TTargetProperty> token, params Expression<Func<TParent, object>>[] propertySelectors)
         {
-            token.PropertyNames.Add(ExpressionTreeHelper.PropertyName(propertySelector));
 
-            return token;
-        }
-
-        /// <summary>
-        ///     Specifies an extra trigger property. Multiple statements may be chained
-        /// </summary>
-        /// <typeparam name="TParent"></typeparam>
-        /// <typeparam name="TProperty"></typeparam>
-        /// <typeparam name="TTargetProperty"></typeparam>
-        /// <param name="token"></param>
-        /// <param name="propertySelector"></param>
-        /// <returns></returns>
-        public static FluentToken<TParent, TTargetProperty> Or<TParent, TProperty, TTargetProperty>(
-            this FluentToken<TParent, TTargetProperty> token, Expression<Func<TParent, TProperty>> propertySelector)
-        {
-            token.PropertyNames.Add(ExpressionTreeHelper.PropertyName(propertySelector));
-
-            return token;
-        }
-
-        /// <summary>
-        ///     Specifies an optional applicability condition as a predicate; if false the rule will not be triggered
-        /// </summary>
-        /// <typeparam name="TParent"></typeparam>
-        /// <typeparam name="TTargetProperty"></typeparam>
-        /// <param name="token"></param>
-        /// <param name="ifPredicate"></param>
-        /// <returns></returns>
-        public static FluentToken<TParent, TTargetProperty> If<TParent, TTargetProperty>(
-            this FluentToken<TParent, TTargetProperty> token, Predicate<TParent> ifPredicate)
-        {
-            token.IfPredicate = ifPredicate;
-
-            return token;
-        }
-
-        /// <summary>
-        ///     Always the last NON OPTIONAL statement in a rule declaration
-        ///     Internally produces an instance of <see cref="Rule{TParent}" /> and adds it into the rules engine
-        /// </summary>
-        /// <typeparam name="TParent"></typeparam>
-        /// <typeparam name="TTargetProperty"></typeparam>
-        /// <param name="token"></param>
-        public static void EndRule<TParent, TTargetProperty>(this FluentToken<TParent, TTargetProperty> token)
-        {
-            if (token.MappingRulesContainer == null)
-                throw new NotSupportedException("Error in fluent syntax. Start with a Set() statement");
+            foreach (var propertySelector in propertySelectors)
+            {
+                token.PropertyNames.Add(ExpressionTreeHelper.PropertyName(propertySelector));
+            }
 
             var propertyName = ExpressionTreeHelper.PropertyName(token.TargetPropertySelector);
 
@@ -130,6 +85,25 @@ namespace RulesEngine.RulesEngine
                 rules.Add(rule);
             }
         }
+
+        
+        /// <summary>
+        ///     Specifies an optional applicability condition as a predicate; if false the rule will not be triggered
+        /// </summary>
+        /// <typeparam name="TParent"></typeparam>
+        /// <typeparam name="TTargetProperty"></typeparam>
+        /// <param name="token"></param>
+        /// <param name="ifPredicate"></param>
+        /// <returns></returns>
+        public static FluentToken<TParent, TTargetProperty> If<TParent, TTargetProperty>(
+            this FluentToken<TParent, TTargetProperty> token, Predicate<TParent> ifPredicate)
+        {
+            token.IfPredicate = ifPredicate;
+
+            return token;
+        }
+
+        
 
         /// <summary>
         ///     Internally used to chain the statements of the fluent syntax

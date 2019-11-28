@@ -9,22 +9,21 @@ namespace EngineTests
         {
             Set(i => i.X)
                 .With(i => i.Y + 1)
-                .OnChanged(i => i.Y)
                 .If(i => i.X < 100)
-                .EndRule();
+                .OnChanged(i => i.Y);
+                
 
             Set(i => i.Y)
                 .With(i => i.X + 1)
-                .OnChanged(i => i.X)
                 .If(i => i.Y < 100)
-                .EndRule();
+                .OnChanged(i => i.X);
+                
 
             Set(i => i.Message)
                 .With(i => "BINGO")
                 .If(i => i.X >= 100 || i.Y >= 100)
-                .OnChanged(i => i.X)
-                .Or(i => i.Y)
-                .EndRule();
+                .OnChanged(i => i.X, i=>i.Y);
+                
         }
 
         #region Overrides of MappingRules<Bingo>

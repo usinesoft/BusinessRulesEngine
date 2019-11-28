@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>BusinessRules.Engine</PackageId>
-    <Version>1.0.6</Version>
+    <Version>1.0.8</Version>
     <Authors>Dan Ionescu</Authors>
     <Company>Usinesoft</Company>
     <Description>A rules engine for .Net applications</Description>
@@ -12,7 +12,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/usinesoft/BusinessRulesEngine</PackageProjectUrl>
     <PackageTags>business rules engine enrichment financial</PackageTags>
-    <PackageReleaseNotes>As nuget package</PackageReleaseNotes>
+    <PackageReleaseNotes>Simplified fluent interface: end your rule description with OnChanged(x=&gt;x.A, x=&gt; x.B). Do not use Or and EndRule anymore</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -20,19 +20,20 @@ namespace RulesEngine.Tools
         /// <returns></returns>
         public static string PropertyName<TParent, TProperty>(Expression<Func<TParent, TProperty>> propertySelector)
         {
-            if (propertySelector == null)
+            if (propertySelector == null) throw new ArgumentNullException(nameof(propertySelector));
+
+            if (propertySelector.Body.NodeType == ExpressionType.Convert)
             {
-                throw new ArgumentNullException(nameof(propertySelector));
+                if (propertySelector.Body is UnaryExpression convert)
+                    if (convert.Operand is MemberExpression memberExpression)
+                        return memberExpression.Member.Name;
+            }
+            else
+            {
+                if (propertySelector.Body is MemberExpression memberExpression) return memberExpression.Member.Name;
             }
 
-            var memberExpression = propertySelector.Body as MemberExpression;
-
-            if (memberExpression == null)
-            {
-                throw new ArgumentException("propertySelector must be a MemberExpression.", nameof(propertySelector));
-            }
-
-            return memberExpression.Member.Name;
+            throw new ArgumentException("propertySelector must be a MemberExpression.", nameof(propertySelector));
         }
 
         /// <summary>
@@ -45,17 +46,12 @@ namespace RulesEngine.Tools
         /// <returns></returns>
         public static string FullPropertyName<TParent, TProperty>(Expression<Func<TParent, TProperty>> propertySelector)
         {
-            if (propertySelector == null)
-            {
-                throw new ArgumentNullException(nameof(propertySelector));
-            }
+            if (propertySelector == null) throw new ArgumentNullException(nameof(propertySelector));
 
             var memberExpression = propertySelector.Body as MemberExpression;
 
             if (memberExpression == null)
-            {
                 throw new ArgumentException("propertySelector must be a MemberExpression.", nameof(propertySelector));
-            }
 
             var components = new List<string>
             {
@@ -72,10 +68,8 @@ namespace RulesEngine.Tools
             components.Reverse();
 
             foreach (var component in components)
-            {
                 sb.Append(component)
                     .Append(".");
-            }
 
             return sb.ToString()
                 .TrimEnd('.');

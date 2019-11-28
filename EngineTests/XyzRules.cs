@@ -8,13 +8,13 @@ namespace EngineTests
         {
             Set(x => x.Y)
                 .With(x => x.X * 2)
-                .OnChanged(x => x.X)
-                .EndRule();
+                .OnChanged(x => x.X);
+                
 
             Set(x => x.Z)
                 .With(x => x.Y * 2)
-                .OnChanged(x => x.Y)
-                .EndRule();
+                .OnChanged(x => x.Y);
+                
 
         }
     }

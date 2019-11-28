@@ -43,7 +43,7 @@ namespace RulesEngine.RulesEngine
             builder.Remove(builder.Length - 1, 1);
             builder.Append(")");
 
-            builder.Append("\t => ")
+            builder.Append(" => ")
                 .Append(TargetPropertyName);
 
             return builder.ToString();

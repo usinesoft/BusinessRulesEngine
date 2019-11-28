@@ -9,40 +9,37 @@ namespace EngineTests.TestModelWithoutInterfaces
         {
             Set(t => t.CounterpartyRole)
                 .With(t => t.Sales != null ? "Client" : "Dealer")
-                .OnChanged(t => t.Sales)
-                .EndRule();
+                .OnChanged(t => t.Sales);
+                
 
             Set(t => t.ClearingHouse)
                 .With(t => GetDefaultClearingHouse(t.Counterparty, t.CdsProduct.RefEntity))
-                .OnChanged(t => t.CdsProduct.RefEntity)
-                .Or(t => t.Counterparty)
-                .EndRule();
+                .OnChanged(t => t.CdsProduct.RefEntity, t=>t.Counterparty);
+                
 
             Set(t => t.SalesCredit)
                 .With(t => Calculator(t.CdsProduct.Spread, t.CdsProduct.Nominal))
-                .OnChanged(t => t.CdsProduct.Spread)
-                .Or(t => t.CdsProduct.RefEntity)
-                .EndRule();
-
+                .OnChanged(t => t.CdsProduct.Spread, t=> t.CdsProduct);
+                
             Set(t => t.CdsProduct.TransactionType)
                 .With(t => GetTransactionType(t.CdsProduct.RefEntity))
-                .OnChanged(t => t.CdsProduct.RefEntity)
-                .EndRule();
+                .OnChanged(t => t.CdsProduct.RefEntity);
+
 
             Set(t => t.CdsProduct.Currency)
                 .With(t => GetDefaultCurrency(t.CdsProduct.TransactionType))
-                .OnChanged(t => t.CdsProduct.TransactionType)
-                .EndRule();
+                .OnChanged(t => t.CdsProduct.TransactionType);
+                
 
             Set(t => t.CdsProduct.Restructuring)
                 .With(t => GetDefaultRestructuring(t.CdsProduct.TransactionType))
-                .OnChanged(t => t.CdsProduct.TransactionType)
-                .EndRule();
+                .OnChanged(t => t.CdsProduct.TransactionType);
+                
 
             Set(t => t.CdsProduct.Seniority)
                 .With(t => GetDefaultSeniority(t.CdsProduct.TransactionType))
-                .OnChanged(t => t.CdsProduct.TransactionType)
-                .EndRule();
+                .OnChanged(t => t.CdsProduct.TransactionType);
+                
         }
 
         private string GetTransactionType(string refEntity)

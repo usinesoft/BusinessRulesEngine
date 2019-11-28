@@ -43,26 +43,24 @@ public class AbcdRules : MappingRules<IAbcd>
         Set(x => x.B)
             .With(x => x.A)
             .If(x => x.A < 100)
-            .OnChanged(x => x.A)
-            .EndRule();
+            .OnChanged(x => x.A);            
 
         Set(x => x.C)
             .With(x => x.B)
             .If(x => x.C < 100)
-            .OnChanged(x => x.B)
-            .EndRule();
+            .OnChanged(x => x.B);            
 
         Set(x => x.D)
             .With(x => x.C)
             .If(x => x.D < 100)
-            .OnChanged(x => x.C)
-            .EndRule();
+            .OnChanged(x => x.C);
+            
 
         Set(x => x.A)
             .With(x => x.D + 1)
             .If(x => x.A < 100)
-            .OnChanged(x => x.D)
-            .EndRule();
+            .OnChanged(x => x.D);
+            
     } 
 
 ```
@@ -128,40 +126,34 @@ public class CdsRules : MappingRules<CdsTrade>
     {
         Set(t => t.CounterpartyRole)
             .With(t => t.Sales != null ? "Client" : "Dealer")
-            .OnChanged(t => t.Sales)
-            .EndRule();
+            .OnChanged(t => t.Sales);            
 
         Set(t => t.ClearingHouse)
             .With(t => GetDefaultClearingHouse(t.Counterparty, t.CdsProduct.RefEntity))
-            .OnChanged(t => t.CdsProduct.RefEntity)
-            .Or(t => t.Counterparty)
-            .EndRule();
-
+            .OnChanged(t => t.CdsProduct.RefEntity, t => t.Counterparty);
+            
         Set(t => t.SalesCredit)
             .With(t => Calculator(t.CdsProduct.Spread, t.CdsProduct.Nominal))
-            .OnChanged(t => t.CdsProduct.Spread)
-            .Or(t => t.CdsProduct.RefEntity)
-            .EndRule();
+            .OnChanged(t => t.CdsProduct.Spread, t => t.CdsProduct.RefEntity);
+            
 
         Set(t => t.CdsProduct.TransactionType)
             .With(t => GetTransactionType(t.CdsProduct.RefEntity))
-            .OnChanged(t => t.CdsProduct.RefEntity)
-            .EndRule();
+            .OnChanged(t => t.CdsProduct.RefEntity);
+            
 
         Set(t => t.CdsProduct.Currency)
             .With(t => GetDefaultCurrency(t.CdsProduct.TransactionType))
-            .OnChanged(t => t.CdsProduct.TransactionType)
-            .EndRule();
+            .OnChanged(t => t.CdsProduct.TransactionType);
+            
 
         Set(t => t.CdsProduct.Restructuring)
             .With(t => GetDefaultRestructuring(t.CdsProduct.TransactionType))
-            .OnChanged(t => t.CdsProduct.TransactionType)
-            .EndRule();
+            .OnChanged(t => t.CdsProduct.TransactionType);            
 
         Set(t => t.CdsProduct.Seniority)
             .With(t => GetDefaultSeniority(t.CdsProduct.TransactionType))
-            .OnChanged(t => t.CdsProduct.TransactionType)
-            .EndRule();
+            .OnChanged(t => t.CdsProduct.TransactionType);            
     }
     // more code here    
     ...
@@ -170,6 +162,6 @@ public class CdsRules : MappingRules<CdsTrade>
 
 Both facades implement **INotifyPropertyChange** so they can be directly data-bound to a WPF or WindowsForms view.
 
-Internally all property updates are done with code injection (no reflection). As you can see in the performance test it is blazing fast.
+Internally all property updates are done with code injection (no reflection). As you can see in the performance test, it is blazing fast.
 
 
