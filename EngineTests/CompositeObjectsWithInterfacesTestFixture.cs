@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using EngineTests.TestModelWithInterfaces;
 using NUnit.Framework;
 using RulesEngine.Interceptors;
@@ -7,6 +8,13 @@ namespace EngineTests
     [TestFixture]
     public class CompositeObjectsWithInterfacesTestFixture
     {
+
+        [Test]
+        public void Multi_threaded_test()
+        {
+            Parallel.For(0, 1000, (i) => Counterparty_change_fills_product());
+        }
+
         [Test]
         public void Counterparty_change_fills_product()
         {

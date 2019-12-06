@@ -32,36 +32,46 @@ namespace RulesEngine.Tools
         {
             var key = MakeKey(declaringType, propertyName);
 
-            if (CompiledGetters.ContainsKey(key))
-            {
-                return CompiledGetters[key];
-            }
 
-            return CompiledGetters[key] = CompileGetter(declaringType.GetProperty(propertyName));
+            lock (CompiledGetters)
+            {
+                if (CompiledGetters.ContainsKey(key))
+                {
+                    return CompiledGetters[key];
+                }
+
+                return CompiledGetters[key] = CompileGetter(declaringType.GetProperty(propertyName));
+            }
         }
 
         public static Action<object, object> CompiledSetter(Type declaringType, string propertyName)
         {
             var key = MakeKey(declaringType, propertyName);
 
-            if (CompiledSetters.ContainsKey(key))
+            lock (CompiledSetters)
             {
-                return CompiledSetters[key];
-            }
+                if (CompiledSetters.ContainsKey(key))
+                {
+                    return CompiledSetters[key];
+                }
 
-            return CompiledSetters[key] = CompileSetter(declaringType.GetProperty(propertyName));
+                return CompiledSetters[key] = CompileSetter(declaringType.GetProperty(propertyName));
+            }
         }
 
         public static Func<object, object, bool> CompiledSmartSetter(Type declaringType, string propertyName)
         {
             var key = MakeKey(declaringType, propertyName);
 
-            if (CompiledSmartSetters.ContainsKey(key))
+            lock (CompiledSmartSetters)
             {
-                return CompiledSmartSetters[key];
-            }
+                if (CompiledSmartSetters.ContainsKey(key))
+                {
+                    return CompiledSmartSetters[key];
+                }
 
-            return CompiledSmartSetters[key] = CompileSmartSetter(declaringType.GetProperty(propertyName));
+                return CompiledSmartSetters[key] = CompileSmartSetter(declaringType.GetProperty(propertyName));
+            }
         }
 
         /// <summary>

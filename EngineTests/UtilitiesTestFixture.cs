@@ -7,7 +7,7 @@ using RulesEngine.Tools;
 namespace EngineTests
 {
     [TestFixture]
-    public class UtlitiesTestFixture
+    public class UtilitiesTestFixture
     {
         /// <summary>
         ///     Runs en action multiple times and count the time

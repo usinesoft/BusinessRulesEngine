@@ -23,34 +23,40 @@ namespace RulesEngine.Tools
         {
             var propertyName = ExpressionTreeHelper.FullPropertyName(expression);
 
-            if (PrecompiledActions.TryGetValue(propertyName, out var setter))
+            lock (PrecompiledActions)
             {
-                return setter;
-            }
+                if (PrecompiledActions.TryGetValue(propertyName, out var setter))
+                {
+                    return setter;
+                }
 
-            var valueParameterExpression = Expression.Parameter(typeof (TProperty));
-            var targetExpression = expression.Body is UnaryExpression unaryExpression
-                ? unaryExpression.Operand
-                : expression.Body;
+                var valueParameterExpression = Expression.Parameter(typeof (TProperty));
+                var targetExpression = expression.Body is UnaryExpression unaryExpression
+                    ? unaryExpression.Operand
+                    : expression.Body;
 
-            var assign = Expression.Lambda<Action<TComplexObject, TProperty>>(
-                Expression.Assign(targetExpression, Expression.Convert(valueParameterExpression, targetExpression.Type)),
-                expression.Parameters.Single(), valueParameterExpression
+                var assign = Expression.Lambda<Action<TComplexObject, TProperty>>(
+                    Expression.Assign(targetExpression, Expression.Convert(valueParameterExpression, targetExpression.Type)),
+                    expression.Parameters.Single(), valueParameterExpression
                 );
 
-            return PrecompiledActions[propertyName] = assign.Compile();
+                return PrecompiledActions[propertyName] = assign.Compile();
+            }
         }
 
         public static Func<TComplexObject, TProperty> Getter(Expression<Func<TComplexObject, TProperty>> expression)
         {
             var propertyName = ExpressionTreeHelper.FullPropertyName(expression);
 
-            if (PrecompiledGetters.TryGetValue(propertyName, out var getter))
+            lock (PrecompiledGetters)
             {
-                return getter;
-            }
+                if (PrecompiledGetters.TryGetValue(propertyName, out var getter))
+                {
+                    return getter;
+                }
 
-            return PrecompiledGetters[propertyName] = expression.Compile();
+                return PrecompiledGetters[propertyName] = expression.Compile();
+            }
         }
     }
 }
