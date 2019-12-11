@@ -16,7 +16,11 @@ namespace EngineTests
             {
                 var instance = new Abcd();
 
-                var abcd = new InterfaceWrapper<IAbcd>(instance, new AbcdRules());
+                var rules = new AbcdRules();
+
+                Assert.AreEqual(4, rules.RulesCount);
+
+                var abcd = new InterfaceWrapper<IAbcd>(instance, rules);
 
                 var inotify = (INotifyPropertyChanged) abcd;
 

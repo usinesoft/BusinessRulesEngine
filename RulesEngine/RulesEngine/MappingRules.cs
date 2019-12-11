@@ -35,11 +35,14 @@ namespace RulesEngine.RulesEngine
         protected FluentExtensions.FluentToken<TRoot, TTargetProperty> Set<TTargetProperty>(
             Expression<Func<TRoot, TTargetProperty>> propertySelector)
         {
+            RulesCount++;
+
             return new FluentExtensions.FluentToken<TRoot, TTargetProperty>
             {
                 MappingRulesContainer = this,
                 TargetPropertySelector = propertySelector
             };
+
         }
 
         /// <summary>
@@ -90,6 +93,8 @@ namespace RulesEngine.RulesEngine
 
             foreach (var name in modifiedInThisIteration) Cascade(name, root, parent, modified, recursionLimit + 1);
         }
+
+        public int RulesCount { get; private set; }
 
         protected virtual void Trace(Rule<TRoot> triggeredRule, string triggerProperty, TRoot instance)
         {
