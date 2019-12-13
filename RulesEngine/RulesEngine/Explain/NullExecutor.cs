@@ -12,12 +12,12 @@ namespace RulesEngine.RulesEngine.Explain
 
         public T ExecuteScalar<T>(QueryModel queryModel)
         {
-            return default;
+            return default(T);
         }
 
         public T ExecuteSingle<T>(QueryModel queryModel, bool returnDefaultWhenEmpty)
         {
-            return default;
+            return default(T);
         }
 
         public IEnumerable<T> ExecuteCollection<T>(QueryModel queryModel)
