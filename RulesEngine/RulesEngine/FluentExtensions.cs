@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq.Expressions;
+using RulesEngine.RulesEngine.Explain;
 using RulesEngine.Tools;
 
 namespace RulesEngine.RulesEngine
@@ -26,6 +28,7 @@ namespace RulesEngine.RulesEngine
         public static FluentToken<TParent, TTargetProperty> With<TParent, TTargetProperty>(
             this FluentToken<TParent, TTargetProperty> token, Expression<Func<TParent, TTargetProperty>> valueComputer)
         {
+            token.ValueComputerExplained = valueComputer.TryExplain();
             token.ValueComputer = valueComputer.Compile();
 
             return token;
@@ -71,8 +74,14 @@ namespace RulesEngine.RulesEngine
             {
                 TriggerProperties = token.PropertyNames,
                 Updater = Updater,
-                TargetPropertyName = propertyName
+                TargetPropertyName = propertyName,
+                IfExplained = token.IfExplained,
+                ValueComputerExplained = token.ValueComputerExplained
+
             };
+
+
+            token.MappingRulesContainer.Rules.Add(rule);
 
             foreach (var name in token.PropertyNames)
             {
@@ -96,9 +105,10 @@ namespace RulesEngine.RulesEngine
         /// <param name="ifPredicate"></param>
         /// <returns></returns>
         public static FluentToken<TParent, TTargetProperty> If<TParent, TTargetProperty>(
-            this FluentToken<TParent, TTargetProperty> token, Predicate<TParent> ifPredicate)
+            this FluentToken<TParent, TTargetProperty> token, Expression<Func<TParent, bool>> ifPredicate)
         {
-            token.IfPredicate = ifPredicate;
+            token.IfPredicate = ifPredicate.Compile();
+            token.IfExplained = ifPredicate.TryExplain();
 
             return token;
         }
@@ -118,11 +128,13 @@ namespace RulesEngine.RulesEngine
 
             public Func<TParent, TTargetProperty> ValueComputer { get; set; }
 
-            public Predicate<TParent> IfPredicate { get; set; }
+            public Func<TParent, bool> IfPredicate { get; set; }
 
             public ISet<string> PropertyNames => _propertyNames ?? (_propertyNames = new HashSet<string>());
 
             public Expression<Func<TParent, TTargetProperty>> TargetPropertySelector { get; set; }
+            public string ValueComputerExplained { get; set; }
+            public string IfExplained { get; set; }
         }
     }
 }

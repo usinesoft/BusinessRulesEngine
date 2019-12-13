@@ -23,6 +23,10 @@ namespace RulesEngine.RulesEngine
         /// </summary>
         public Func<TParent, bool> Updater { get; set; }
 
+        public string IfExplained { get; set; }
+
+        public string ValueComputerExplained { get; set; }
+
         #region Overrides of Object
 
         /// <summary>
@@ -34,19 +38,21 @@ namespace RulesEngine.RulesEngine
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.Append("(");
-            foreach (var triggerProperty in TriggerProperties)
-            {
-                builder.Append(triggerProperty)
-                    .Append(" ");
-            }
-            builder.Remove(builder.Length - 1, 1);
-            builder.Append(")");
 
-            builder.Append(" => ")
-                .Append(TargetPropertyName);
+            builder.Append(TargetPropertyName);
+            builder.Append(" = ");
+            builder.Append(ValueComputerExplained);
+
+            if (!string.IsNullOrWhiteSpace(IfExplained))
+            {
+                builder.Append("\tIF ");
+                builder.Append(IfExplained);
+
+            }
 
             return builder.ToString();
+
+
         }
 
         #endregion

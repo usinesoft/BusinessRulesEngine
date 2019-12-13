@@ -18,6 +18,8 @@ namespace RulesEngine.RulesEngine
             new Dictionary<string, IList<Rule<TRoot>>>();
 
 
+        private readonly List<Rule<TRoot>> _rules = new List<Rule<TRoot>>();
+
         /// <summary>
         ///     If set triggers an exception which prevent a stack overflow if the specified level of recursion is over the
         ///     threshold
@@ -25,6 +27,9 @@ namespace RulesEngine.RulesEngine
         protected int RecursionLimit { get; set; }
 
         public IDictionary<string, IList<Rule<TRoot>>> RulesByTrigger => _rulesByTrigger;
+
+        public IList<Rule<TRoot>> Rules=> _rules;
+
 
         /// <summary>
         ///     First declaration of the fluent syntax. Sets the target property of the rule
@@ -35,8 +40,7 @@ namespace RulesEngine.RulesEngine
         protected FluentExtensions.FluentToken<TRoot, TTargetProperty> Set<TTargetProperty>(
             Expression<Func<TRoot, TTargetProperty>> propertySelector)
         {
-            RulesCount++;
-
+            
             return new FluentExtensions.FluentToken<TRoot, TTargetProperty>
             {
                 MappingRulesContainer = this,
@@ -94,7 +98,7 @@ namespace RulesEngine.RulesEngine
             foreach (var name in modifiedInThisIteration) Cascade(name, root, parent, modified, recursionLimit + 1);
         }
 
-        public int RulesCount { get; private set; }
+        public int RulesCount => Rules.Count;
 
         protected virtual void Trace(Rule<TRoot> triggeredRule, string triggerProperty, TRoot instance)
         {

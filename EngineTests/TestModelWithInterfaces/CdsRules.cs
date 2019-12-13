@@ -7,8 +7,16 @@ namespace EngineTests.TestModelWithInterfaces
     {
         public CdsRules()
         {
+            
+
             Set(t => t.CounterpartyRole)
-                .With(t => t.Sales != null ? "Client" : "Dealer")
+                .With(t =>  "Client")
+                .If(t=>t.Sales != null)
+                .OnChanged(t => t.Sales);
+
+            Set(t => t.CounterpartyRole)
+                .With(t => "Dealer")
+                .If(t => t.Sales == null)
                 .OnChanged(t => t.Sales);
 
 

@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.4.0" />
+    <PackageReference Include="Remotion.Linq" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
