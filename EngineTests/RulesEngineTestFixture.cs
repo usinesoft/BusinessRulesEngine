@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using EngineTests.TestModelWithoutInterfaces;
 using NUnit.Framework;
+using RulesEngine.Interceptors;
 
 namespace EngineTests
 {
@@ -96,6 +99,48 @@ namespace EngineTests
                 Assert.IsTrue(modified.Contains("D"));
                 Assert.AreEqual(100, abcd.A);
             }
+        }
+
+
+
+        [Test]
+        public void Explicitly_trigger_a_rule_set()
+        {
+            var abcd = new Abcd();
+            var abcdRules = new AbcdRules();
+
+            var modified = abcdRules.TriggerAll(abcd);
+
+            Assert.AreEqual(4, modified.Count());
+            Assert.IsTrue(modified.Contains("A"));
+            Assert.IsTrue(modified.Contains("B"));
+            Assert.IsTrue(modified.Contains("C"));
+            Assert.IsTrue(modified.Contains("D"));
+            Assert.AreEqual(100, abcd.A);
+
+            var dog = new Dog {Age = 14, Name = "Max"};
+            var doggyRules = new DogRules();
+
+            doggyRules.TriggerAll(dog);
+            Assert.AreEqual(true, dog.IsDangerous);
+            Assert.AreEqual("ball", dog.FavoriteToy);
+
+            var trade = new CdsTrade
+            {
+                Product = new CreditDefaultSwap { RefEntity = "AXA"},
+                Counterparty = "CHASEOTC"
+
+            };
+
+            var cdsRules =  new CdsRules();
+
+            cdsRules.TriggerAll(trade);
+            
+
+            Assert.AreEqual("ICEURO", trade.ClearingHouse);
+            Assert.AreEqual("MMR", trade.CdsProduct.Restructuring);
+            Assert.AreEqual("SNR", trade.CdsProduct.Seniority);
+
         }
     }
 }

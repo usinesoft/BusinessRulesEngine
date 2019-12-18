@@ -16,9 +16,17 @@ namespace RulesEngine.RulesEngine.Explain
             var executor = new NullExecutor();
             var queryable = new NullQueryable<T>(executor);
 
-            var unused = queryable.Where(ifExpression).ToList();
+            try
+            {
+                var unused = queryable.Where(ifExpression).ToList();
 
-            return executor.Expression.ToString();
+                return executor.Expression.ToString();
+            }
+            catch
+            {
+                // expression too complex
+                return null;
+            }
 
         }
 

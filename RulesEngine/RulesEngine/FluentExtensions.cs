@@ -134,7 +134,7 @@ namespace RulesEngine.RulesEngine
 
             public Expression<Func<TParent, TTargetProperty>> TargetPropertySelector { get; set; }
             public string ValueComputerExplained { get; set; }
-            public string IfExplained { get; set; }
+            public string IfExplained { get; set; } 
         }
     }
 }

@@ -146,7 +146,7 @@ namespace RulesEngine.RulesEngine.Explain
             {
                 andExpression.Elements.Add(CallToLeafExpression(callExpression));
             }
-            else
+            else 
             {
                 throw new NotSupportedException("ExplainExpression too complex");
             }

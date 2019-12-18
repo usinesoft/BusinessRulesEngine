@@ -4,9 +4,9 @@ namespace EngineTests.TestModelWithoutInterfaces
     {
         public CreditDefaultSwap CdsProduct
         {
-            get { return (CreditDefaultSwap) Product; }
+            get => (CreditDefaultSwap) Product;
 
-            set { Product = value; }
+            set => Product = value;
         }
     }
 }
