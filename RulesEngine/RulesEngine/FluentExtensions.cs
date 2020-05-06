@@ -24,11 +24,12 @@ namespace RulesEngine.RulesEngine
         /// <typeparam name="TTargetProperty"></typeparam>
         /// <param name="token"></param>
         /// <param name="valueComputer"></param>
+        /// <param name="manualExplain">optionally provide a human readable description</param>
         /// <returns></returns>
         public static FluentToken<TParent, TTargetProperty> With<TParent, TTargetProperty>(
-            this FluentToken<TParent, TTargetProperty> token, Expression<Func<TParent, TTargetProperty>> valueComputer)
+            this FluentToken<TParent, TTargetProperty> token, Expression<Func<TParent, TTargetProperty>> valueComputer, string manualExplain = null)
         {
-            token.ValueComputerExplained = valueComputer.TryExplain();
+            token.ValueComputerExplained = manualExplain ?? valueComputer.TryExplain();
             token.ValueComputer = valueComputer.Compile();
 
             return token;
@@ -95,7 +96,7 @@ namespace RulesEngine.RulesEngine
             }
         }
 
-        
+
         /// <summary>
         ///     Specifies an optional applicability condition as a predicate; if false the rule will not be triggered
         /// </summary>
@@ -103,12 +104,13 @@ namespace RulesEngine.RulesEngine
         /// <typeparam name="TTargetProperty"></typeparam>
         /// <param name="token"></param>
         /// <param name="ifPredicate"></param>
+        /// <param name="manualExplain">optionally provide a human readable description</param>
         /// <returns></returns>
         public static FluentToken<TParent, TTargetProperty> If<TParent, TTargetProperty>(
-            this FluentToken<TParent, TTargetProperty> token, Expression<Func<TParent, bool>> ifPredicate)
+            this FluentToken<TParent, TTargetProperty> token, Expression<Func<TParent, bool>> ifPredicate, string manualExplain = null) 
         {
             token.IfPredicate = ifPredicate.Compile();
-            token.IfExplained = ifPredicate.TryExplain();
+            token.IfExplained = manualExplain ?? ifPredicate.TryExplain();
 
             return token;
         }

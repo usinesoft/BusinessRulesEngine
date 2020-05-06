@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>BusinessRules.Engine</PackageId>
-    <Version>1.0.12</Version>
+    <Version>1.0.14</Version>
     <Authors>Dan Ionescu</Authors>
     <Company>Usinesoft</Company>
     <Description>A rules engine for .Net applications</Description>
@@ -12,7 +12,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/usinesoft/BusinessRulesEngine</PackageProjectUrl>
     <PackageTags>business rules engine enrichment financial</PackageTags>
-    <PackageReleaseNotes>Simplified fluent interface: end your rule description with OnChanged(x=&gt;x.A, x=&gt; x.B). Do not use Or and EndRule anymore</PackageReleaseNotes>
+    <PackageReleaseNotes>Provide optional explanation for rules. Multi-target support</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -14,7 +14,7 @@ namespace EngineTests
 
             Set(d=>d.IsDangerous).With(d=>d.Age > 3 && d.Name != "Fluffy" ).OnChanged(d=>d.Age);
 
-            Set(d=>d.FavoriteToy).With(d=>GetFavoriteToy()).If(d=>d.FavoriteToy == null).OnChanged(d=>d.FavoriteToy);
+            Set(d=>d.FavoriteToy).With(d=>GetFavoriteToy(), "find him a toy").If(d=>d.FavoriteToy == null, "he does not already have one").OnChanged(d=>d.FavoriteToy);
 
         }
 
